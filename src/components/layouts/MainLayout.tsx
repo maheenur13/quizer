@@ -9,7 +9,7 @@ export const MainLayout: FC<PropsType> = ({ children }) => {
   return (
     <div>
       <Header />
-      <main className="bg-gray-100">{children}</main>
+      <main className=" px-6 py-3 h-full">{children}</main>
     </div>
   );
 };

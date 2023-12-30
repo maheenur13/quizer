@@ -1,13 +1,14 @@
 import { userLoggedOut } from "@/store/features/auth/auth.slice";
 import { removeUser } from "@/store/features/user/user.slice";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { Badge } from "antd";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 
 export const Header: FC = () => {
   const dispatch = useAppDispatch();
   const {
-    user: { email },
+    user: { email, role },
   } = useAppSelector((state) => state.user);
 
   const handleLogout = () => {
@@ -18,7 +19,7 @@ export const Header: FC = () => {
   };
 
   return (
-    <nav className="w-full h-16 fixed top backdrop-blur-lg z-10">
+    <nav className="w-full h-16 sticky top-0 backdrop-blur-lg z-10 shadow-md">
       <div className="h-full w-full bg-white/60">
         <div className="flex items-center justify-between w-full md:max-w-7xl h-full mx-auto ">
           <div>
@@ -30,9 +31,18 @@ export const Header: FC = () => {
                 <Link to="/">Home</Link>
               </li>
               <li className="p-3">
-                <Link to="/all-books">Books</Link>
+                <Link to="/answers">Answers</Link>
               </li>
-              <li className="p-3">WishList</li>
+              {role === "admin" && (
+                <li className="p-3">
+                  <Link to="/questions">Questions</Link>
+                </li>
+              )}
+              <Badge className="mr-4" count={"role"} showZero>
+                <li className="text-md px-3 py-2 bg-slate-200">
+                  <p>{role}</p>
+                </li>
+              </Badge>
               {email && (
                 <>
                   <li className="p-3">
@@ -66,45 +76,6 @@ export const Header: FC = () => {
                   </li>
                 </>
               )}
-              {/* <li className="ml-5">
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="outline-none">
-                    <Avatar>
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuLabel>Account</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="cursor-pointer">
-                      Profile
-                    </DropdownMenuItem>
-                    {!user.email && (
-                      <>
-                        <Link to="/login">
-                          <DropdownMenuItem className="cursor-pointer">
-                            Login
-                          </DropdownMenuItem>
-                        </Link>
-                        <Link to="/signup">
-                          <DropdownMenuItem className="cursor-pointer">
-                            Sign up
-                          </DropdownMenuItem>
-                        </Link>
-                      </>
-                    )}
-                    {user.email && (
-                      <DropdownMenuItem
-                        onClick={handleLogout}
-                        className="cursor-pointer"
-                      >
-                        Logout
-                      </DropdownMenuItem>
-                    )}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </li> */}
             </ul>
           </div>
         </div>

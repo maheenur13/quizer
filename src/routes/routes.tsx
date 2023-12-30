@@ -1,4 +1,4 @@
-import { AdminLayout, MainLayout } from "@/components/layouts";
+import { MainLayout } from "@/components/layouts";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import NotFound from "@/pages/NotFound";
@@ -26,9 +26,9 @@ const routes = createBrowserRouter([
     path: "/questions",
     element: (
       <AdminRoute>
-        <AdminLayout>
+        <MainLayout>
           <Questions />
-        </AdminLayout>
+        </MainLayout>
       </AdminRoute>
     ),
   },
