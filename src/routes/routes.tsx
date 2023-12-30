@@ -1,17 +1,21 @@
-import { MainLayout } from "@/components/layouts";
+import { AdminLayout, MainLayout } from "@/components/layouts";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import NotFound from "@/pages/NotFound";
-import SignUp from "@/pages/SignUp";
 import { createBrowserRouter } from "react-router-dom";
+import PrivateRoute from "./PrivateRoute";
+import Questions from "@/pages/Questions";
+import AdminRoute from "./AdminRoute";
 
 const routes = createBrowserRouter([
   {
     path: "/",
     element: (
-      <MainLayout>
-        <Home />
-      </MainLayout>
+      <PrivateRoute>
+        <MainLayout>
+          <Home />
+        </MainLayout>
+      </PrivateRoute>
     ),
   },
   {
@@ -19,8 +23,14 @@ const routes = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/sign-up",
-    element: <SignUp />,
+    path: "/questions",
+    element: (
+      <AdminRoute>
+        <AdminLayout>
+          <Questions />
+        </AdminLayout>
+      </AdminRoute>
+    ),
   },
 
   {

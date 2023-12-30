@@ -1,10 +1,16 @@
 import { RouterProvider } from "react-router-dom";
 import routes from "./routes/routes";
+import { useAuthCheck } from "./hooks/useAuthCheck";
 
 function App() {
+  const authChecked = useAuthCheck();
   return (
     <>
-      <RouterProvider router={routes} />
+      {!authChecked ? (
+        <div className="text-center p-4">Please wait</div>
+      ) : (
+        <RouterProvider router={routes} />
+      )}
     </>
   );
 }
