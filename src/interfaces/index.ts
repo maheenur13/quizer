@@ -31,4 +31,5 @@ export interface QuizDetails {
   createdAt: string;
   publishedAt: string | null;
   duration: number;
+  quizCategory: string;
 }

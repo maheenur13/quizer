@@ -31,4 +31,25 @@ const userList: IUser[] = [
   // Add more mock user data as needed
 ];
 
+export type ICategory =
+  | "SPORTS"
+  | "SCIENCE"
+  | "HISTORY"
+  | "RELIGION"
+  | "CULTURE"
+  | "GENERAL";
+export interface IQuizCategory {
+  value: ICategory;
+  label: string;
+}
+
+export const quizCategory: IQuizCategory[] = [
+  { value: "SPORTS", label: "Sports" },
+  { value: "SCIENCE", label: "Science" },
+  { value: "HISTORY", label: "History" },
+  { value: "RELIGION", label: "Religion" },
+  { value: "CULTURE", label: "Culture" },
+  { value: "GENERAL", label: "General" },
+];
+
 export default userList;
