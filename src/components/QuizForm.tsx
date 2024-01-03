@@ -1,76 +1,77 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { QuizDetails } from "@/interfaces";
-import { Form, Input, Modal, Radio } from "antd";
-import { FC } from "react";
+import { Form, FormInstance, Input, InputNumber, Radio } from "antd";
+import { FC, useEffect } from "react";
+import ClockCircleOutlined from "@ant-design/icons/ClockCircleOutlined";
+import { useAppSelector } from "@/store/hook";
 
 interface CollectionCreateFormProps {
-  open: boolean;
-  onCreate: (values: QuizDetails) => void;
-  onCancel: () => void;
+  mode: "create" | "edit";
+  defaultValue: QuizDetails | null;
+
+  form: FormInstance<any>;
 }
 
 const QuizForm: FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel,
+  defaultValue,
+  mode,
+  form,
 }) => {
-  const [form] = Form.useForm();
+  const { isQuizModalOpen } = useAppSelector((state) => state.quiz);
+
+  useEffect(() => {
+    if (isQuizModalOpen) {
+      if (defaultValue && mode === "edit") {
+        form.setFieldsValue(defaultValue);
+      } else if (mode === "create") {
+        form.setFieldsValue({ type: "multiple_choice" });
+      }
+    }
+  }, [mode, defaultValue, form, isQuizModalOpen]);
+
   return (
-    <Modal
-      open={open}
-      title="Quiz Details"
-      okText="Create"
-      centered
-      okButtonProps={{
-        style: {
-          backgroundColor: "blue",
-        },
-      }}
-      cancelText="Cancel"
-      onCancel={onCancel}
-      onOk={() => {
-        form
-          .validateFields()
-          .then((values) => {
-            form.resetFields();
-            onCreate(values);
-          })
-          .catch((info) => {
-            console.log("Validate Failed:", info);
-          });
-      }}
-    >
-      <Form
-        form={form}
-        layout="vertical"
-        name="form_in_modal"
-        initialValues={{ type: "multiple_choice" }}
+    <Form form={form} layout="vertical" name="form_in_modal">
+      <Form.Item
+        name="quizTitle"
+        label="Quiz Title"
+        rules={[
+          {
+            required: true,
+            message: "Please input the title of collection!",
+          },
+        ]}
       >
-        <Form.Item
-          name="quizTitle"
-          label="Quiz Title"
-          rules={[
-            {
-              required: true,
-              message: "Please input the title of collection!",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item name="quizDescription" label="Quiz Description">
-          <Input type="textarea" />
-        </Form.Item>
-        <Form.Item
-          name="type"
-          className="collection-create-form_last-form-item"
-        >
-          <Radio.Group>
-            <Radio value="multiple_choice">Multiple Choice</Radio>
-            <Radio value="text_answer">Text Answer</Radio>
-          </Radio.Group>
-        </Form.Item>
-      </Form>
-    </Modal>
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name="duration"
+        label="Quiz Duration (In minutes)"
+        rules={[
+          {
+            required: true,
+            message: "Please input duration!",
+          },
+        ]}
+        initialValue={10}
+      >
+        <InputNumber
+          style={{ width: "100%" }}
+          prefix={<ClockCircleOutlined />}
+          max={120}
+          min={10}
+          placeholder="duration in minutes"
+        />
+      </Form.Item>
+      <Form.Item name="quizDescription" label="Quiz Description">
+        <Input type="textarea" />
+      </Form.Item>
+      <Form.Item name="type" className="collection-create-form_last-form-item">
+        <Radio.Group>
+          <Radio value="multiple_choice">Multiple Choice</Radio>
+          {/* <Radio value="text_answer">Text Answer</Radio> */}
+        </Radio.Group>
+      </Form.Item>
+    </Form>
   );
 };
 
