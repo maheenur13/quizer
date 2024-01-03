@@ -106,7 +106,6 @@ const Questions: FC = () => {
       {quizList?.length > 0 ? (
         <>
           <QuizList
-            quizes={quizList}
             onDeleteQuiz={onDeleteQuiz}
             handleEditQuiz={handleEditQuiz}
             handleAddQuestion={handleAddQuestion}
@@ -153,11 +152,7 @@ const Questions: FC = () => {
               });
           }}
         >
-          <QuizForm
-            form={quizForm}
-            defaultValue={currentValues}
-            mode={quizFormMode}
-          />
+          <QuizForm form={quizForm} defaultValue={currentValues} />
         </Modal>
       </>
       <>

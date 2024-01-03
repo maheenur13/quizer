@@ -6,28 +6,24 @@ import ClockCircleOutlined from "@ant-design/icons/ClockCircleOutlined";
 import { useAppSelector } from "@/store/hook";
 
 interface CollectionCreateFormProps {
-  mode: "create" | "edit";
   defaultValue: QuizDetails | null;
-
   form: FormInstance<any>;
 }
 
-const QuizForm: FC<CollectionCreateFormProps> = ({
-  defaultValue,
-  mode,
-  form,
-}) => {
-  const { isQuizModalOpen } = useAppSelector((state) => state.quiz);
+const QuizForm: FC<CollectionCreateFormProps> = ({ defaultValue, form }) => {
+  const { isQuizModalOpen, quizFormMode } = useAppSelector(
+    (state) => state.quiz
+  );
 
   useEffect(() => {
     if (isQuizModalOpen) {
-      if (defaultValue && mode === "edit") {
+      if (defaultValue && quizFormMode === "edit") {
         form.setFieldsValue(defaultValue);
-      } else if (mode === "create") {
+      } else if (quizFormMode === "create") {
         form.setFieldsValue({ type: "multiple_choice" });
       }
     }
-  }, [mode, defaultValue, form, isQuizModalOpen]);
+  }, [quizFormMode, defaultValue, form, isQuizModalOpen]);
 
   return (
     <Form form={form} layout="vertical" name="form_in_modal">

@@ -7,7 +7,6 @@ import { ColumnsType } from "antd/es/table";
 import { FC } from "react";
 
 type PropsType = {
-  quizes: QuizDetails[];
   onDeleteQuiz: (quiz: QuizDetails, index: number) => void;
   handleEditQuiz: (quiz: QuizDetails, index: number) => void;
   handleAddQuestion: (quiz: QuizDetails) => void;
@@ -15,13 +14,12 @@ type PropsType = {
 };
 
 const QuizList: FC<PropsType> = ({
-  quizes,
   onDeleteQuiz,
   handleEditQuiz,
   handleAddQuestion,
   handleEditQuestion,
 }) => {
-  useAppSelector((state) => state.quiz);
+  const { quizList } = useAppSelector((state) => state.quiz);
 
   const columns: ColumnsType<QuizDetails> = [
     {
@@ -139,7 +137,7 @@ const QuizList: FC<PropsType> = ({
       dataIndex: "duration",
       key: "duration",
       render: (_value, record) => {
-        return <p>{record.duration || 0}</p>;
+        return <p>{record.duration + "m"}</p>;
       },
       sorter: (a, b) => Number(a.duration) - Number(b.duration),
     },
@@ -215,7 +213,7 @@ const QuizList: FC<PropsType> = ({
           x: 1700,
         }}
         columns={columns}
-        dataSource={quizes}
+        dataSource={quizList}
         bordered
       />
     </div>
