@@ -5,6 +5,7 @@ import { useAppSelector } from "@/store/hook";
 import { Button, Popconfirm, Space, Switch, Table, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { FC } from "react";
+import { quizCategory } from "../../mockdata";
 
 type PropsType = {
   onDeleteQuiz: (quiz: QuizDetails, index: number) => void;
@@ -35,9 +36,22 @@ const QuizList: FC<PropsType> = ({
       render: (text) => <a>{text}</a>,
     },
     {
-      title: "Description",
-      dataIndex: "quizDescription",
-      key: "quizDescription",
+      title: "Category",
+      dataIndex: "quizCategory",
+      key: "quizCategory",
+      render: (_value, record) => {
+        return <Tag color="orange">{record.quizCategory}</Tag>;
+      },
+      filters: [
+        ...quizCategory.map((itm) => ({ value: itm.value, text: itm.label })),
+      ],
+
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value: unknown, record) => {
+        if (record.quizCategory === value) return true;
+        return false;
+      },
     },
     {
       title: "Type",

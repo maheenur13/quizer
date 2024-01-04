@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { QuizDetails } from "@/interfaces";
-import { Form, FormInstance, Input, InputNumber, Radio } from "antd";
+import { Form, FormInstance, Input, InputNumber, Radio, Select } from "antd";
 import { FC, useEffect } from "react";
 import ClockCircleOutlined from "@ant-design/icons/ClockCircleOutlined";
 import { useAppSelector } from "@/store/hook";
+import { quizCategory } from "../../mockdata";
 
 interface CollectionCreateFormProps {
   defaultValue: QuizDetails | null;
@@ -27,6 +28,18 @@ const QuizForm: FC<CollectionCreateFormProps> = ({ defaultValue, form }) => {
 
   return (
     <Form form={form} layout="vertical" name="form_in_modal">
+      <Form.Item
+        name="quizCategory"
+        label="Quiz Category"
+        rules={[
+          {
+            required: true,
+            message: "Please select quiz category!",
+          },
+        ]}
+      >
+        <Select style={{ width: "100%" }} options={quizCategory} />
+      </Form.Item>
       <Form.Item
         name="quizTitle"
         label="Quiz Title"

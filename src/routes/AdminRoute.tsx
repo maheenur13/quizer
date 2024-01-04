@@ -11,5 +11,9 @@ export default function AdminRoute({ children }: IProps) {
 
   const location = useLocation();
 
-  return !role ? <Navigate to="/" state={{ from: location }} /> : children;
+  return !role || role === "user" ? (
+    <Navigate to="/" state={{ from: location }} />
+  ) : (
+    children
+  );
 }

@@ -1,7 +1,8 @@
-import { QuizDetails } from "@/interfaces";
+import { IQuizSubmissionDetails, QuizDetails } from "@/interfaces";
 import store from "@/store/store";
 import {
   addQuizToList,
+  addToAnswerList,
   closeQuizModal,
   handleQuestionModal,
   openQuizModal,
@@ -42,4 +43,7 @@ export const changeQuestionFormMode = (type: "create" | "edit") => {
 };
 export const syncAllQuizFromDB = () => {
   store.dispatch(syncQuizFromDB());
+};
+export const handleAddToAnswerList = (values: IQuizSubmissionDetails) => {
+  store.dispatch(addToAnswerList(values));
 };

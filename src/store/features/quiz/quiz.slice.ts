@@ -1,4 +1,4 @@
-import { QuizDetails } from "@/interfaces";
+import { IQuizSubmissionDetails, QuizDetails } from "@/interfaces";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -8,6 +8,8 @@ type IStateType = {
   quizFormMode: "create" | "edit";
   questionFormMode: "create" | "edit";
   isQuestionModalOpen: boolean;
+  answerList: IQuizSubmissionDetails[];
+  liveQuizList: QuizDetails[];
 };
 
 const initialState: IStateType = {
@@ -16,6 +18,8 @@ const initialState: IStateType = {
   quizFormMode: "create",
   isQuestionModalOpen: false,
   questionFormMode: "create",
+  answerList: [],
+  liveQuizList: [],
 };
 
 const userSlice = createSlice({
@@ -51,7 +55,8 @@ const userSlice = createSlice({
           quiz = {
             ...quiz,
             ...action.payload,
-            no_of_question: action.payload.questions?.length || 0,
+            no_of_question:
+              action.payload.questions?.length || quiz.questions.length,
           };
         }
         return quiz;
@@ -90,7 +95,13 @@ const userSlice = createSlice({
         return quiz;
       });
       localStorage.setItem("questionSet", JSON.stringify(latestQuiz));
+
       state.quizList = latestQuiz;
+      const currentLiveQuizes = latestQuiz.filter(
+        (quiz) => quiz.visibility === true
+      );
+      localStorage.setItem("liveQuizes", JSON.stringify(currentLiveQuizes));
+      state.liveQuizList = currentLiveQuizes;
     },
     setQuizFormMode: (
       state,
@@ -103,6 +114,9 @@ const userSlice = createSlice({
       action: PayloadAction<IStateType["questionFormMode"]>
     ) => {
       state.questionFormMode = action.payload;
+    },
+    addToAnswerList: (state, action: PayloadAction<IQuizSubmissionDetails>) => {
+      state.answerList.push(action.payload);
     },
   },
 });
@@ -118,6 +132,7 @@ export const {
   syncQuizFromDB,
   handleQuestionModal,
   setQuestionFormMode,
+  addToAnswerList,
 } = userSlice.actions;
 
 export default userSlice.reducer;

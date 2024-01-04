@@ -1,0 +1,7 @@
+.ant-table-filter-dropdown-btns .ant-btn-primary {
+  background-color: rgb(0, 115, 255) !important;
+}
+
+.ant-btn-default:disabled {
+  color: #9f9f9f !important;
+}

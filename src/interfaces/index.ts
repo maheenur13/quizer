@@ -15,6 +15,13 @@ export interface IQuizSubmissionDetails {
   wrongAnswer: number;
   totalScore: number;
   numberOfAttempts: number;
+  answerList: [
+    {
+      question: string;
+      answer: string;
+    }
+  ];
+  previousAnswers: IQuizSubmissionDetails[];
 }
 
 export interface QuizDetails {

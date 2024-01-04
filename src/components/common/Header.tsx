@@ -19,9 +19,9 @@ export const Header: FC = () => {
   };
 
   return (
-    <nav className="w-full h-16 sticky top-0 backdrop-blur-lg z-10 shadow-md">
+    <nav className="w-full h-16 sticky top-0 backdrop-blur-lg z-10 shadow-md px-4">
       <div className="h-full w-full bg-white/60">
-        <div className="flex items-center justify-between w-full md:max-w-7xl h-full mx-auto ">
+        <div className="flex items-center justify-between w-full  h-full mx-auto ">
           <div>
             <h5 className="font-semibold">QUIZER</h5>
           </div>
