@@ -3,6 +3,8 @@ import { FC, useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ICategory, quizCategory } from "../../mockdata";
 import { QuizDetails } from "@/interfaces";
+import QuizPreview from "@/components/QuizPreview";
+import { Navigation, Pagination, Virtual } from "swiper/modules";
 
 interface ILiveQuizType {
   value: ICategory;
@@ -18,22 +20,25 @@ const Home: FC = () => {
     const finalLiveQuiz: QuizDetails[] = JSON.parse(
       currentLiveQuizes as string
     );
-    const groupedQuizzes = quizCategory
-      .map((category) => {
-        const categoryQuizzes = finalLiveQuiz.filter(
-          (quiz) => quiz.quizCategory === category.value
-        );
-        return {
-          value: category.value,
-          label: category.label,
-          quizes: categoryQuizzes,
-        };
-      })
-      .filter((itm) => itm.quizes.length > 0);
+    const groupedQuizzes = quizCategory?.map((category) => {
+      const categoryQuizzes = finalLiveQuiz?.filter(
+        (quiz) => quiz.quizCategory === category.value
+      );
+      return {
+        value: category.value,
+        label: category.label,
+        quizes: categoryQuizzes,
+      };
+    })?.filter((itm) => itm.quizes?.length > 0) || [];
 
     setLiveQuizes(groupedQuizzes);
   }, []);
-  console.log(liveQuizes);
+
+  const handleOpenAnswerModal = (quizItem: QuizDetails) => {
+    console.log(quizItem);
+
+
+  }
 
   return (
     <div className="bg-slate-100">
@@ -55,22 +60,21 @@ const Home: FC = () => {
             </h5>
             <Divider />
             <Swiper
+              className="py-5"
+              modules={[Virtual, Navigation, Pagination]}
               spaceBetween={50}
-              slidesPerView={5}
+              slidesPerView={4}
+              pagination={{ clickable: true }}
+              scrollbar={{ draggable: true }}
+
+              navigation={true}
+              virtual
               onSlideChange={() => console.log("slide change")}
-              // onSwiper={(swiper) => console.log(swiper)}
+            // onSwiper={(swiper) => console.log(swiper)}
             >
               {quiz.quizes.map((quizItem) => (
-                <SwiperSlide key={quizItem.key}>
-                  <Card
-                    style={{ width: "100%" }}
-                    title={quizItem.quizTitle}
-                    bordered={true}
-                  >
-                    <div>
-                      <Tag>{quizItem.quizCategory}</Tag>
-                    </div>
-                  </Card>
+                <SwiperSlide  className="cursor-pointer" key={quizItem.key}>
+                  <QuizPreview onClick={() => handleOpenAnswerModal(quizItem)} quizItem={quizItem} />
                 </SwiperSlide>
               ))}
             </Swiper>

@@ -6,6 +6,7 @@ import { createBrowserRouter } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import Questions from "@/pages/Questions";
 import AdminRoute from "./AdminRoute";
+import QuizAnswer from "@/pages/QuizAnsewer";
 
 const routes = createBrowserRouter([
   {
@@ -32,7 +33,16 @@ const routes = createBrowserRouter([
       </AdminRoute>
     ),
   },
-
+  {
+    path: "/questions/answer/:quizId",
+    element: (
+      <PrivateRoute>
+        <MainLayout>
+          <QuizAnswer/>
+        </MainLayout>
+      </PrivateRoute>
+    ),
+  },
   {
     path: "*",
     element: <NotFound />,

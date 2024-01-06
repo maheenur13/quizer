@@ -5,3 +5,6 @@
 .ant-btn-default:disabled {
   color: #9f9f9f !important;
 }
+.ant-popconfirm-buttons .ant-btn-primary {
+  background-color: #0183fc;
+}

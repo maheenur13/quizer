@@ -74,6 +74,7 @@ const QuizForm: FC<CollectionCreateFormProps> = ({ defaultValue, form }) => {
       <Form.Item name="quizDescription" label="Quiz Description">
         <Input type="textarea" />
       </Form.Item>
+      
       <Form.Item name="type" className="collection-create-form_last-form-item">
         <Radio.Group>
           <Radio value="multiple_choice">Multiple Choice</Radio>
