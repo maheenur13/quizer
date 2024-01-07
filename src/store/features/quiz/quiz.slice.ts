@@ -10,6 +10,7 @@ type IStateType = {
   isQuestionModalOpen: boolean;
   answerList: IQuizSubmissionDetails[];
   liveQuizList: QuizDetails[];
+  currentAttemptedQuiz: QuizDetails | null;
 };
 
 const initialState: IStateType = {
@@ -20,6 +21,7 @@ const initialState: IStateType = {
   questionFormMode: "create",
   answerList: [],
   liveQuizList: [],
+  currentAttemptedQuiz: null,
 };
 
 const userSlice = createSlice({
@@ -49,9 +51,19 @@ const userSlice = createSlice({
         state.quizList = JSON.parse(localQuestionSets);
       }
     },
+    syncAttemptedQuizFromDB: (state) => {
+      const localCurrentAttemptedQuiz = localStorage.getItem(
+        "currentAttemptedQuiz"
+      );
+      if (localCurrentAttemptedQuiz) {
+        state.currentAttemptedQuiz = JSON.parse(localCurrentAttemptedQuiz);
+      }
+    },
     updateQuiz: (state, action: PayloadAction<QuizDetails>) => {
       const latestQuiz = [...state.quizList].map((quiz) => {
         if (quiz.key === action.payload.key) {
+          console.log(action.payload);
+
           quiz = {
             ...quiz,
             ...action.payload,
@@ -63,6 +75,12 @@ const userSlice = createSlice({
       });
       localStorage.setItem("questionSet", JSON.stringify(latestQuiz));
       state.quizList = latestQuiz;
+
+      const currentLiveQuizes = latestQuiz.filter(
+        (quiz) => quiz.visibility === true
+      );
+      localStorage.setItem("liveQuizes", JSON.stringify(currentLiveQuizes));
+      state.liveQuizList = currentLiveQuizes;
     },
 
     removeQuizFromList: (state, action: PayloadAction<QuizDetails["key"]>) => {
@@ -115,6 +133,36 @@ const userSlice = createSlice({
     ) => {
       state.questionFormMode = action.payload;
     },
+    currentAttemptedQuiz: (state, action: PayloadAction<QuizDetails>) => {
+      state.currentAttemptedQuiz = action.payload;
+
+      localStorage.setItem(
+        "currentAttemptedQuiz",
+        JSON.stringify(state.currentAttemptedQuiz)
+      );
+
+      const latestQuiz = [...state.quizList].map((quiz) => {
+        if (quiz.key === action.payload.key) {
+          console.log(action.payload);
+
+          quiz = {
+            ...quiz,
+            ...action.payload,
+            no_of_question:
+              action.payload.questions?.length || quiz.questions.length,
+          };
+        }
+        return quiz;
+      });
+      localStorage.setItem("questionSet", JSON.stringify(latestQuiz));
+      state.quizList = latestQuiz;
+
+      const currentLiveQuizes = latestQuiz.filter(
+        (quiz) => quiz.visibility === true
+      );
+      localStorage.setItem("liveQuizes", JSON.stringify(currentLiveQuizes));
+      state.liveQuizList = currentLiveQuizes;
+    },
     addToAnswerList: (state, action: PayloadAction<IQuizSubmissionDetails>) => {
       state.answerList.push(action.payload);
     },
@@ -133,6 +181,8 @@ export const {
   handleQuestionModal,
   setQuestionFormMode,
   addToAnswerList,
+  currentAttemptedQuiz,
+  syncAttemptedQuizFromDB,
 } = userSlice.actions;
 
 export default userSlice.reducer;

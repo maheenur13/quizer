@@ -1,10 +1,13 @@
-import { Card, Divider, Tag } from "antd";
+import { Divider } from "antd";
 import { FC, useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ICategory, quizCategory } from "../../mockdata";
 import { QuizDetails } from "@/interfaces";
 import QuizPreview from "@/components/QuizPreview";
 import { Navigation, Pagination, Virtual } from "swiper/modules";
+import { handleCurrentAttemptedQuiz } from "@/store/features/quiz/quiz.actions";
+import { useAppSelector } from "@/store/hook";
+import { useNavigate } from "react-router-dom";
 
 interface ILiveQuizType {
   value: ICategory;
@@ -13,6 +16,8 @@ interface ILiveQuizType {
 }
 
 const Home: FC = () => {
+  const navigate = useNavigate();
+  const { quizList } = useAppSelector((state) => state.quiz);
   const [liveQuizes, setLiveQuizes] = useState<ILiveQuizType[]>([]);
   useEffect(() => {
     const currentLiveQuizes = localStorage.getItem("liveQuizes");
@@ -20,25 +25,30 @@ const Home: FC = () => {
     const finalLiveQuiz: QuizDetails[] = JSON.parse(
       currentLiveQuizes as string
     );
-    const groupedQuizzes = quizCategory?.map((category) => {
-      const categoryQuizzes = finalLiveQuiz?.filter(
-        (quiz) => quiz.quizCategory === category.value
-      );
-      return {
-        value: category.value,
-        label: category.label,
-        quizes: categoryQuizzes,
-      };
-    })?.filter((itm) => itm.quizes?.length > 0) || [];
+    const groupedQuizzes =
+      quizCategory
+        ?.map((category) => {
+          const categoryQuizzes = finalLiveQuiz?.filter(
+            (quiz) => quiz.quizCategory === category.value
+          );
+          return {
+            value: category.value,
+            label: category.label,
+            quizes: categoryQuizzes,
+          };
+        })
+        ?.filter((itm) => itm.quizes?.length > 0) || [];
 
     setLiveQuizes(groupedQuizzes);
-  }, []);
+  }, [quizList]);
 
-  const handleOpenAnswerModal = (quizItem: QuizDetails) => {
-    console.log(quizItem);
+  const handleOnConfirm = (quizItem: QuizDetails) => {
+    const newQuizItem = { ...quizItem };
+    newQuizItem.totalAttempts++;
+    handleCurrentAttemptedQuiz(newQuizItem);
 
-
-  }
+    navigate(`/questions/answer/${quizItem.key}`);
+  };
 
   return (
     <div className="bg-slate-100">
@@ -46,8 +56,6 @@ const Home: FC = () => {
         return (
           <div
             style={{
-              // backgroundColor: "white",
-
               padding: "1rem",
               maxWidth: "1500px",
               textAlign: "center",
@@ -65,16 +73,18 @@ const Home: FC = () => {
               spaceBetween={50}
               slidesPerView={4}
               pagination={{ clickable: true }}
-              scrollbar={{ draggable: true }}
-
+              // scrollbar={{ draggable: true }}
               navigation={true}
               virtual
               onSlideChange={() => console.log("slide change")}
-            // onSwiper={(swiper) => console.log(swiper)}
+              // onSwiper={(swiper) => console.log(swiper)}
             >
               {quiz.quizes.map((quizItem) => (
-                <SwiperSlide  className="cursor-pointer" key={quizItem.key}>
-                  <QuizPreview onClick={() => handleOpenAnswerModal(quizItem)} quizItem={quizItem} />
+                <SwiperSlide key={quizItem.key}>
+                  <QuizPreview
+                    handleOnConfirm={handleOnConfirm}
+                    quizItem={quizItem}
+                  />
                 </SwiperSlide>
               ))}
             </Swiper>

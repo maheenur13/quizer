@@ -7,15 +7,15 @@ import { Button, Empty, Form, Modal } from "antd";
 import { FC, useEffect, useState } from "react";
 import { useAppSelector } from "@/store/hook";
 import {
-  addQuizMToQuizList,
-  changeQuestionFormMode,
-  changeQuizFormMode,
-  closeMQuizModal,
-  openMQuizModal,
-  removeMQuizFromQuizList,
-  setQuestionModal,
-  setUpdateQuiz,
-  syncAllQuizFromDB,
+  handleAddQuizMToQuizList,
+  handleChangeQuestionFormMode,
+  handleChangeQuizFormMode,
+  handleCloseMQuizModal,
+  handleOpenMQuizModal,
+  handleRemoveQuizFromQuizList,
+  handleSetQuestionModal,
+  handleUpdateQuiz,
+  handleSyncAllQuizFromDB,
 } from "@/store/features/quiz/quiz.actions";
 import QuestionForm from "@/components/QuestionForm";
 
@@ -34,30 +34,30 @@ const Questions: FC = () => {
   const [currentValues, setCurrentValues] = useState<QuizDetails | null>(null);
 
   useEffect(() => {
-    syncAllQuizFromDB();
+    handleSyncAllQuizFromDB();
   }, []);
 
-  const onCreate = (values: QuizDetails) => addQuizMToQuizList(values);
-  const onUpdate = (values: QuizDetails) => setUpdateQuiz(values);
+  const onCreate = (values: QuizDetails) => handleAddQuizMToQuizList(values);
+  const onUpdate = (values: QuizDetails) => handleUpdateQuiz(values);
 
   const onDeleteQuiz = (values: QuizDetails) =>
-    removeMQuizFromQuizList(values.key);
+    handleRemoveQuizFromQuizList(values.key);
 
   const handleEditQuiz = (values: QuizDetails) => {
-    changeQuizFormMode("edit");
+    handleChangeQuizFormMode("edit");
 
     setCurrentValues(values);
-    openMQuizModal();
+    handleOpenMQuizModal();
   };
   const handleAddQuestion = (values: QuizDetails) => {
-    changeQuestionFormMode("create");
-    setQuestionModal(true);
+    handleChangeQuestionFormMode("create");
+    handleSetQuestionModal(true);
 
     setCurrentValues(values);
   };
   const handleEditQuestion = (values: QuizDetails) => {
-    changeQuestionFormMode("edit");
-    setQuestionModal(true);
+    handleChangeQuestionFormMode("edit");
+    handleSetQuestionModal(true);
 
     setCurrentValues({ ...values });
   };
@@ -82,8 +82,8 @@ const Questions: FC = () => {
           questions: [...questionForm.getFieldsValue().questions],
         };
       }
-      setUpdateQuiz(newCurrentQuiz as QuizDetails);
-      setQuestionModal(false);
+      handleUpdateQuiz(newCurrentQuiz as QuizDetails);
+      handleSetQuestionModal(false);
     }
   };
 
@@ -96,8 +96,8 @@ const Questions: FC = () => {
           icon={<PlusCircleOutlined />}
           size={"middle"}
           onClick={() => {
-            changeQuizFormMode("create");
-            openMQuizModal();
+            handleChangeQuizFormMode("create");
+            handleOpenMQuizModal();
           }}
         >
           Add Quiz
@@ -129,7 +129,7 @@ const Questions: FC = () => {
           cancelText="Cancel"
           onCancel={async () => {
             quizForm.resetFields();
-            closeMQuizModal();
+            handleCloseMQuizModal();
             setCurrentValues(null);
           }}
           destroyOnClose={true}
@@ -145,7 +145,7 @@ const Questions: FC = () => {
                 } else {
                   onUpdate({ ...values, key: currentValues?.key });
                 }
-                closeMQuizModal();
+                handleCloseMQuizModal();
               })
               .catch((info) => {
                 console.log("Validate Failed:", info);
@@ -177,7 +177,7 @@ const Questions: FC = () => {
             },
           }}
           onCancel={async () => {
-            setQuestionModal(false);
+            handleSetQuestionModal(false);
             questionForm.resetFields();
           }}
         >

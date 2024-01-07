@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+type OptionType = {
+  title: string;
+};
+
 export interface IQuestionType {
   key: string;
   title: string;
   type: "multiple_choice" | "text_answer";
-  options: {
-    title: string;
-  }[];
+  options: OptionType[] | any;
 }
 
 export interface IQuizSubmissionDetails {

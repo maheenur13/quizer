@@ -1,47 +1,49 @@
-import { QuizDetails } from '@/interfaces';
-import { Card, Popconfirm, Tag } from 'antd';
-import { FC } from 'react'
-
+import { QuizDetails } from "@/interfaces";
+import { Card, Popconfirm, Tag } from "antd";
+import { FC } from "react";
+import { ClockCircleOutlined, PlayCircleOutlined } from "@ant-design/icons";
 
 type PropsType = {
-    quizItem: QuizDetails;
-    onClick: () => void
-}
+  quizItem: QuizDetails;
+  handleOnConfirm: (quizItem: QuizDetails) => void;
+};
 
-const QuizPreview: FC<PropsType> = ({ quizItem, onClick }) => {
-    return (
+const QuizPreview: FC<PropsType> = ({ quizItem, handleOnConfirm }) => {
+  return (
+    <Card style={{ width: "100%" }} title={quizItem.quizTitle} bordered={true}>
+      <div>
+        <Tag color="orange">{quizItem.quizCategory}</Tag>
+        <Tag color="pink-inverse">
+          <ClockCircleOutlined /> {quizItem.duration}m
+        </Tag>
+      </div>
+      <div>
         <Popconfirm
-            autoAdjustOverflow
-            destroyTooltipOnHide
-            placement="bottom"
-            title={"Are you sure to attempt the quiz?"}
-            description={<div>
-                <h6>
-                    Total question: {quizItem.no_of_question}
-                </h6>
-                <h6>
-                    Duration: {quizItem.duration} minuites
-                </h6>
-                <h6>
-                    Total attempts: {quizItem.totalAttempts}
-                </h6>
-            </div>}
-            okText="Yes"
-            cancelText="No"
+          destroyTooltipOnHide
+          placement="bottom"
+          title={"Are you sure to attempt the quiz?"}
+          description={
+            <div>
+              <h6>Total question: {quizItem.no_of_question}</h6>
+              <h6>Duration: {quizItem.duration} minuites</h6>
+              <h6>Total attempts: {quizItem.totalAttempts}</h6>
+            </div>
+          }
+          okText="Yes"
+          cancelText="No"
+          onConfirm={() => handleOnConfirm(quizItem)}
         >
-            <Card
-                onClick={onClick}
-                style={{ width: "100%" }}
-                title={quizItem.quizTitle}
-                bordered={true}
-            >
-                <div>
-                    <Tag>{quizItem.quizCategory}</Tag>
-                </div>
-            </Card>
+          <PlayCircleOutlined
+            style={{
+              marginTop: "1rem",
+              fontSize: "2rem",
+              color: "#636363",
+            }}
+          />
         </Popconfirm>
-
-    )
-}
+      </div>
+    </Card>
+  );
+};
 
 export default QuizPreview;

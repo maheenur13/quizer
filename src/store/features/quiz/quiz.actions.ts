@@ -4,46 +4,54 @@ import {
   addQuizToList,
   addToAnswerList,
   closeQuizModal,
+  currentAttemptedQuiz,
   handleQuestionModal,
   openQuizModal,
   quizVisibility,
   removeQuizFromList,
   setQuestionFormMode,
   setQuizFormMode,
+  syncAttemptedQuizFromDB,
   syncQuizFromDB,
   updateQuiz,
 } from "./quiz.slice";
 
-export const addQuizMToQuizList = (quiz: QuizDetails) => {
+export const handleAddQuizMToQuizList = (quiz: QuizDetails) => {
   store.dispatch(addQuizToList(quiz));
 };
-export const setUpdateQuiz = (quiz: QuizDetails) => {
+export const handleUpdateQuiz = (quiz: QuizDetails) => {
   store.dispatch(updateQuiz(quiz));
 };
-export const removeMQuizFromQuizList = (key: QuizDetails["key"]) => {
+export const handleRemoveQuizFromQuizList = (key: QuizDetails["key"]) => {
   store.dispatch(removeQuizFromList(key));
 };
-export const openMQuizModal = () => {
+export const handleOpenMQuizModal = () => {
   store.dispatch(openQuizModal());
 };
-export const closeMQuizModal = () => {
+export const handleCloseMQuizModal = () => {
   store.dispatch(closeQuizModal());
 };
-export const setQuestionModal = (value: boolean) => {
+export const handleSetQuestionModal = (value: boolean) => {
   store.dispatch(handleQuestionModal(value));
 };
-export const changeQuizVisibility = (key: number, value: boolean) => {
+export const handleChangeQuizVisibility = (key: number, value: boolean) => {
   store.dispatch(quizVisibility({ key, value }));
 };
-export const changeQuizFormMode = (type: "create" | "edit") => {
+export const handleChangeQuizFormMode = (type: "create" | "edit") => {
   store.dispatch(setQuizFormMode(type));
 };
-export const changeQuestionFormMode = (type: "create" | "edit") => {
+export const handleChangeQuestionFormMode = (type: "create" | "edit") => {
   store.dispatch(setQuestionFormMode(type));
 };
-export const syncAllQuizFromDB = () => {
+export const handleSyncAllQuizFromDB = () => {
   store.dispatch(syncQuizFromDB());
+};
+export const handleSyncAttemptedQuizFromDB = () => {
+  store.dispatch(syncAttemptedQuizFromDB());
 };
 export const handleAddToAnswerList = (values: IQuizSubmissionDetails) => {
   store.dispatch(addToAnswerList(values));
+};
+export const handleCurrentAttemptedQuiz = (values: QuizDetails) => {
+  store.dispatch(currentAttemptedQuiz(values));
 };

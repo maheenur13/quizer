@@ -6,7 +6,7 @@ import { createBrowserRouter } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import Questions from "@/pages/Questions";
 import AdminRoute from "./AdminRoute";
-import QuizAnswer from "@/pages/QuizAnsewer";
+import Answer from "@/pages/questions/Answer";
 
 const routes = createBrowserRouter([
   {
@@ -38,7 +38,7 @@ const routes = createBrowserRouter([
     element: (
       <PrivateRoute>
         <MainLayout>
-          <QuizAnswer/>
+          <Answer />
         </MainLayout>
       </PrivateRoute>
     ),

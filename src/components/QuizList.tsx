@@ -1,6 +1,6 @@
 import { dateToFormat } from "@/helpers";
 import { QuizDetails } from "@/interfaces";
-import { changeQuizVisibility } from "@/store/features/quiz/quiz.actions";
+import { handleChangeQuizVisibility } from "@/store/features/quiz/quiz.actions";
 import { useAppSelector } from "@/store/hook";
 import { Button, Popconfirm, Space, Switch, Table, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
@@ -119,7 +119,7 @@ const QuizList: FC<PropsType> = ({
         return (
           <Switch
             onChange={(checked) => {
-              changeQuizVisibility(record.key, checked);
+              handleChangeQuizVisibility(record.key, checked);
             }}
             className="bg-slate-400"
             value={record.visibility}
