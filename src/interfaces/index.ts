@@ -1,14 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-type OptionType = {
-  title: string;
+export type IOptionType = {
+  optionName: string;
+  isSelected: boolean;
 };
 
 export interface IQuestionType {
-  key: string;
+  key?: string;
   title: string;
-  type: "multiple_choice" | "text_answer";
-  options: OptionType[] | any;
+  type?: "multiple_choice" | "text_answer";
+  options: IOptionType[];
 }
+export type IQuestionAnswerType = {
+  title: string;
+  options: IOptionType[];
+};
 
 export interface IQuizSubmissionDetails {
   key: number;
@@ -43,3 +48,12 @@ export interface QuizDetails {
   duration: number;
   quizCategory: string;
 }
+
+export type IAnswerType = {
+  studentId: number;
+  answerAt: string | null;
+  isSubmitted: boolean;
+  answer: IQuestionAnswerType[];
+  quizTitle: string;
+  previousAnswers?: Omit<IAnswerType, "previousAnswers">[];
+};

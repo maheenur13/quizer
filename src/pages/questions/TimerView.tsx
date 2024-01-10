@@ -28,7 +28,8 @@ const TimerView: FC<PropsType> = ({ handleTimeOut }) => {
         style={{
           position: "fixed",
           top: 80,
-          right: 400,
+          right: "200px",
+          zIndex: 9999,
         }}
       >
         <Button

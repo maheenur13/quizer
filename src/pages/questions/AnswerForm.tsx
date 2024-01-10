@@ -1,29 +1,65 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { QuizDetails } from "@/interfaces";
-import { Button, Col, Form, Radio, Row } from "antd";
+import { IOptionType, IQuestionType } from "@/interfaces";
+import {
+  Button,
+  Col,
+  Form,
+  FormInstance,
+  Radio,
+  RadioChangeEvent,
+  Row,
+} from "antd";
 import { FC } from "react";
 
 type PropsType = {
-  handleQuizSubmission: (values: any) => void;
-  isTimeOut: boolean;
-  currentAttemptedQuiz: QuizDetails;
+  handleQuizSubmission?: (values: any) => void;
+  isTimeOut?: boolean;
+  questions: IQuestionType[];
+  form?: FormInstance<any>;
+  mode?: "view" | "create" | "edit";
+  handleChange?: (
+    e: RadioChangeEvent,
+    question: IOptionType,
+    options: IQuestionType["options"],
+    index: number,
+    title: string
+  ) => void;
 };
 
 const AnswerForm: FC<PropsType> = ({
   handleQuizSubmission,
   isTimeOut,
-  currentAttemptedQuiz,
+  questions,
+  form,
+  handleChange,
+  mode = "create",
 }) => {
+  const transformedData = [...questions].reduce((acc: any, item, index) => {
+    const selectedOption: any = item.options?.find(
+      (option) => option?.isSelected
+    );
+    acc[index] = { value: selectedOption?.optionName };
+    return acc;
+  }, {});
+
   return (
     <Row justify={"center"}>
-      <Col span={12}>
+      <Col span={mode === "view" ? 20 : 16}>
         <Form
-          disabled={isTimeOut}
+          form={form && form}
+          disabled={isTimeOut || mode === "view"}
           name="answers"
           layout="vertical"
           onFinish={handleQuizSubmission}
+          initialValues={
+            mode === "view"
+              ? {
+                  answers: transformedData,
+                }
+              : {}
+          }
         >
-          {currentAttemptedQuiz?.questions.map((question, questionIndex) => (
+          {questions.map((question, questionIndex) => (
             <Form.Item
               className="border px-4 py-6 rounded shadow shadow-zinc-100 bg-slate-100"
               name={[`answers`, `${questionIndex}`, "value"]}
@@ -41,27 +77,43 @@ const AnswerForm: FC<PropsType> = ({
               ]}
             >
               <Radio.Group key={questionIndex}>
-                {Object.entries(question.options[0]).map(
-                  ([optionKey, optionValue]) => {
-                    return (
-                      <Radio key={optionKey} value={optionValue}>
-                        {`${optionValue}`}
-                      </Radio>
-                    );
-                  }
-                )}
+                {question.options.map((option, index) => {
+                  // console.log(option);
+
+                  return (
+                    <Radio
+                      onChange={(e) => {
+                        if (handleChange) {
+                          handleChange(
+                            e,
+                            option,
+                            question.options,
+                            index,
+                            question.title
+                          );
+                        }
+                      }}
+                      key={option.optionName}
+                      value={option.optionName}
+                    >
+                      {`${option.optionName}`}
+                    </Radio>
+                  );
+                })}
               </Radio.Group>
             </Form.Item>
           ))}
-          <Form.Item>
-            <Button
-              className="bg-blue-500 w-full h-10"
-              type="primary"
-              htmlType="submit"
-            >
-              Submit Quiz
-            </Button>
-          </Form.Item>
+          {mode !== "view" && (
+            <Form.Item>
+              <Button
+                className="bg-blue-500 w-full h-10"
+                type="primary"
+                htmlType="submit"
+              >
+                Submit Quiz
+              </Button>
+            </Form.Item>
+          )}
         </Form>
       </Col>
     </Row>

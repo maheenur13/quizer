@@ -1,4 +1,4 @@
-import { IQuizSubmissionDetails, QuizDetails } from "@/interfaces";
+import { IAnswerType, QuizDetails } from "@/interfaces";
 import store from "@/store/store";
 import {
   addQuizToList,
@@ -11,6 +11,7 @@ import {
   removeQuizFromList,
   setQuestionFormMode,
   setQuizFormMode,
+  syncAnswerList,
   syncAttemptedQuizFromDB,
   syncQuizFromDB,
   updateQuiz,
@@ -49,8 +50,11 @@ export const handleSyncAllQuizFromDB = () => {
 export const handleSyncAttemptedQuizFromDB = () => {
   store.dispatch(syncAttemptedQuizFromDB());
 };
-export const handleAddToAnswerList = (values: IQuizSubmissionDetails) => {
+export const handleAddToAnswerList = (values: IAnswerType) => {
   store.dispatch(addToAnswerList(values));
+};
+export const handleSyncAnswerList = () => {
+  store.dispatch(syncAnswerList());
 };
 export const handleCurrentAttemptedQuiz = (values: QuizDetails) => {
   store.dispatch(currentAttemptedQuiz(values));

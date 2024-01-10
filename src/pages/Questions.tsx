@@ -67,22 +67,51 @@ const Questions: FC = () => {
       let newCurrentQuiz = {};
       if (questionFormMode === "create") {
         if (await questionForm.validateFields()) {
+          const qustions = [...questionForm.getFieldsValue().questions].map(
+            (question) => {
+              return {
+                ...question,
+                options: Object.entries(question.options[0]).map(
+                  (optionItem) => {
+                    return {
+                      optionName: optionItem[1],
+                      isSelected: false,
+                    };
+                  }
+                ),
+              };
+            }
+          );
           newCurrentQuiz = {
             ...currentValues,
             questions: [
               ...(currentValues?.questions as IQuestionType[]),
-              ...questionForm.getFieldsValue().questions,
+              ...qustions,
             ],
           };
         }
-        // }
       } else {
+        const qustions = [...questionForm.getFieldsValue().questions].map(
+          (question) => {
+            return {
+              ...question,
+              options: Object.entries(question.options[0]).map((optionItem) => {
+                return {
+                  optionName: optionItem[1],
+                  isSelected: false,
+                };
+              }),
+            };
+          }
+        );
         newCurrentQuiz = {
           ...currentValues,
-          questions: [...questionForm.getFieldsValue().questions],
+          questions: [...qustions],
         };
       }
+
       handleUpdateQuiz(newCurrentQuiz as QuizDetails);
+
       handleSetQuestionModal(false);
     }
   };

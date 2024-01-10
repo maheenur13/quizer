@@ -7,6 +7,7 @@ import PrivateRoute from "./PrivateRoute";
 import Questions from "@/pages/Questions";
 import AdminRoute from "./AdminRoute";
 import Answer from "@/pages/questions/Answer";
+import Answers from "@/pages/Answers";
 
 const routes = createBrowserRouter([
   {
@@ -31,6 +32,26 @@ const routes = createBrowserRouter([
           <Questions />
         </MainLayout>
       </AdminRoute>
+    ),
+  },
+  {
+    path: "/questions",
+    element: (
+      <AdminRoute>
+        <MainLayout>
+          <Questions />
+        </MainLayout>
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/answers",
+    element: (
+      <PrivateRoute>
+        <MainLayout>
+          <Answers />
+        </MainLayout>
+      </PrivateRoute>
     ),
   },
   {

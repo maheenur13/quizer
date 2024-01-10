@@ -9,6 +9,7 @@ import "swiper/css/scrollbar";
 import { useEffect } from "react";
 import {
   handleSyncAllQuizFromDB,
+  handleSyncAnswerList,
   handleSyncAttemptedQuizFromDB,
 } from "./store/features/quiz/quiz.actions";
 
@@ -18,6 +19,7 @@ function App() {
   useEffect(() => {
     handleSyncAllQuizFromDB();
     handleSyncAttemptedQuizFromDB();
+    handleSyncAnswerList();
   }, []);
   return (
     <>

@@ -1,4 +1,4 @@
-import { IQuizSubmissionDetails, QuizDetails } from "@/interfaces";
+import { IAnswerType, QuizDetails } from "@/interfaces";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -8,7 +8,7 @@ type IStateType = {
   quizFormMode: "create" | "edit";
   questionFormMode: "create" | "edit";
   isQuestionModalOpen: boolean;
-  answerList: IQuizSubmissionDetails[];
+  answerList: IAnswerType[];
   liveQuizList: QuizDetails[];
   currentAttemptedQuiz: QuizDetails | null;
 };
@@ -62,8 +62,6 @@ const userSlice = createSlice({
     updateQuiz: (state, action: PayloadAction<QuizDetails>) => {
       const latestQuiz = [...state.quizList].map((quiz) => {
         if (quiz.key === action.payload.key) {
-          console.log(action.payload);
-
           quiz = {
             ...quiz,
             ...action.payload,
@@ -143,8 +141,6 @@ const userSlice = createSlice({
 
       const latestQuiz = [...state.quizList].map((quiz) => {
         if (quiz.key === action.payload.key) {
-          console.log(action.payload);
-
           quiz = {
             ...quiz,
             ...action.payload,
@@ -163,8 +159,35 @@ const userSlice = createSlice({
       localStorage.setItem("liveQuizes", JSON.stringify(currentLiveQuizes));
       state.liveQuizList = currentLiveQuizes;
     },
-    addToAnswerList: (state, action: PayloadAction<IQuizSubmissionDetails>) => {
-      state.answerList.push(action.payload);
+    addToAnswerList: (state, action: PayloadAction<IAnswerType>) => {
+      const localData = localStorage.getItem("answerList");
+      const finalData = JSON.parse(localData as string) || [];
+      const isQuizExist = [...finalData].find(
+        (item) => item.quizTitle === action.payload.quizTitle
+      );
+
+      if (isQuizExist) {
+        const newData = [...(finalData as IAnswerType[])].map((item) => {
+          const newItem = { ...item };
+          if (item.quizTitle === isQuizExist.quizTitle) {
+            delete item.previousAnswers;
+            newItem.previousAnswers?.push(item);
+          }
+          newItem.answer = action.payload.answer;
+          return newItem;
+        });
+
+        state.answerList = newData;
+      } else {
+        state.answerList.push(action.payload);
+      }
+
+      localStorage.setItem("answerList", JSON.stringify(state.answerList));
+    },
+    syncAnswerList: (state) => {
+      const localData = localStorage.getItem("answerList");
+      const finalData = JSON.parse(localData as string);
+      state.answerList = finalData || [];
     },
   },
 });
@@ -183,6 +206,7 @@ export const {
   addToAnswerList,
   currentAttemptedQuiz,
   syncAttemptedQuizFromDB,
+  syncAnswerList,
 } = userSlice.actions;
 
 export default userSlice.reducer;

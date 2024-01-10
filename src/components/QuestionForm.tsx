@@ -28,22 +28,35 @@ const QuestionForm: FC<PropsType> = ({ quizDetails, form }) => {
             },
           ],
         });
-      } else {
-        form.setFieldsValue({ questions: quizDetails?.questions });
+      } else if (quizDetails) {
+        const newQuestion = [...quizDetails.questions].map((details) => {
+          return {
+            ...details,
+            options: [
+              {
+                first: details.options[0].optionName,
+                second: details.options[1].optionName,
+                third: details.options[2].optionName,
+                fourth: details.options[3].optionName,
+              },
+            ],
+          };
+        });
+        form.setFieldsValue({ questions: newQuestion });
       }
     }
   }, [
     form,
     isQuestionModalOpen,
     questionFormMode,
+    quizDetails,
     quizDetails?.questions,
-    quizDetails?.questions?.length,
   ]);
+  // console.log(form.getFieldsValue());
 
   return (
     <Form
       labelCol={{ span: 6 }}
-      // onFinish={handleFinish}
       layout="vertical"
       wrapperCol={{ span: 24 }}
       form={form}
