@@ -22,7 +22,7 @@ const Answer: FC = () => {
   const [quizAnswer, setQuizAnswer] = useState<IAnswerType>({
     answer: [],
     answerAt: null,
-    studentId: id,
+    studentId: id as number,
     isSubmitted: false,
     quizTitle: currentAttemptedQuiz?.quizTitle as string,
     previousAnswers: [],

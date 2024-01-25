@@ -51,7 +51,10 @@ const Home: FC = () => {
   };
 
   return (
-    <div className="bg-slate-100">
+    <div className="bg-slate-100 h-full">
+      {liveQuizes?.length === 0 && (
+        <h3 className="text-center p-5">No quiz Found!</h3>
+      )}
       {liveQuizes.map((quiz) => {
         return (
           <div

@@ -160,7 +160,7 @@ const QuizList: FC<PropsType> = ({
       title: "Action",
       key: "action",
       width: 220,
-      render: (value, record, index) => (
+      render: (_value, record, index) => (
         <>
           <Space size="middle">
             <Button
