@@ -1,4 +1,11 @@
-# React + TypeScript + Vite
+# Quizer App
+
+### Technologies
+
+- Vite
+- React
+- Typescript
+- Redux Toolkit
 
 ### provide this command to the terminal to install all the dependencies
 
