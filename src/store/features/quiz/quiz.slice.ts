@@ -161,19 +161,27 @@ const userSlice = createSlice({
     },
     addToAnswerList: (state, action: PayloadAction<IAnswerType>) => {
       const localData = localStorage.getItem("answerList");
-      const finalData = JSON.parse(localData as string) || [];
+      const finalData: IAnswerType[] = JSON.parse(localData as string) || [];
       const isQuizExist = [...finalData].find(
-        (item) => item.quizTitle === action.payload.quizTitle
+        (item) =>
+          item.quizTitle === action.payload.quizTitle &&
+          item.studentId === action.payload.studentId
       );
 
       if (isQuizExist) {
         const newData = [...(finalData as IAnswerType[])].map((item) => {
           const newItem = { ...item };
-          if (item.quizTitle === isQuizExist.quizTitle) {
+          if (
+            item.quizTitle === isQuizExist.quizTitle &&
+            item.studentId === isQuizExist.studentId
+          ) {
             delete item.previousAnswers;
             newItem.previousAnswers?.push(item);
           }
           newItem.answer = action.payload.answer;
+          newItem.answerAt = action.payload.answerAt;
+          newItem.totalScore = action.payload.totalScore;
+
           return newItem;
         });
 

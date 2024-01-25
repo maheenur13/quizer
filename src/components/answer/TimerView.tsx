@@ -8,7 +8,7 @@ type PropsType = {
   handleTimeOut: () => void;
 };
 
-const TimerView: FC<PropsType> = ({ handleTimeOut }) => {
+export const TimerView: FC<PropsType> = ({ handleTimeOut }) => {
   const { currentAttemptedQuiz } = useAppSelector((state) => state.quiz);
 
   const [seconds] = useTimer({
@@ -48,5 +48,3 @@ const TimerView: FC<PropsType> = ({ handleTimeOut }) => {
     </div>
   );
 };
-
-export default TimerView;

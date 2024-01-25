@@ -206,14 +206,20 @@ const QuizList: FC<PropsType> = ({
               }}
               onConfirm={() => onDeleteQuiz(record, index)}
             >
-              <Button danger type="primary" className="bg-green-600 text-white">
+              <Button
+                disabled={record.visibility}
+                danger
+                type="primary"
+                className="bg-green-600 text-white"
+              >
                 Delete Quiz
               </Button>
             </Popconfirm>
           </Space>
           {record.visibility && (
             <p className="text-red-500 ms-2 ">
-              * cant add or edit question or edit quiz when it is published!
+              * cant add, delete or edit question or edit quiz when it is
+              published!
             </p>
           )}
         </>

@@ -17,22 +17,25 @@ type PropsType = {
   questions: IQuestionType[];
   form?: FormInstance<any>;
   mode?: "view" | "create" | "edit";
+  title?: string;
   handleChange?: (
     e: RadioChangeEvent,
     question: IOptionType,
     options: IQuestionType["options"],
     index: number,
-    title: string
+    title: string,
+    questionIndex: number
   ) => void;
 };
 
-const AnswerForm: FC<PropsType> = ({
+export const AnswerForm: FC<PropsType> = ({
   handleQuizSubmission,
   isTimeOut,
   questions,
   form,
   handleChange,
   mode = "create",
+  title,
 }) => {
   const transformedData = [...questions].reduce((acc: any, item, index) => {
     const selectedOption: any = item.options?.find(
@@ -44,7 +47,10 @@ const AnswerForm: FC<PropsType> = ({
 
   return (
     <Row justify={"center"}>
-      <Col span={mode === "view" ? 20 : 16}>
+      <Col span={mode === "view" ? 22 : 16}>
+        {mode === "create" && (
+          <h5 className="text-xl font-semibold mb-3">{title}</h5>
+        )}
         <Form
           form={form && form}
           disabled={isTimeOut || mode === "view"}
@@ -61,7 +67,13 @@ const AnswerForm: FC<PropsType> = ({
         >
           {questions.map((question, questionIndex) => (
             <Form.Item
-              className="border px-4 py-6 rounded shadow shadow-zinc-100 bg-slate-100"
+              className={`${
+                mode === "view"
+                  ? question.mark === 0
+                    ? "border border-red-500 bg-red-50"
+                    : "border border-green-500 bg-green-50"
+                  : "border bg-slate-100"
+              } px-4 py-6 rounded shadow shadow-zinc-100 `}
               name={[`answers`, `${questionIndex}`, "value"]}
               key={questionIndex}
               label={
@@ -76,7 +88,7 @@ const AnswerForm: FC<PropsType> = ({
                 },
               ]}
             >
-              <Radio.Group key={questionIndex}>
+              <Radio.Group key={question.key}>
                 {question.options.map((option, index) => {
                   // console.log(option);
 
@@ -89,14 +101,23 @@ const AnswerForm: FC<PropsType> = ({
                             option,
                             question.options,
                             index,
-                            question.title
+                            question.title,
+                            questionIndex
                           );
                         }
                       }}
                       key={option.optionName}
                       value={option.optionName}
                     >
-                      {`${option.optionName}`}
+                      <span
+                        className={
+                          option.isCorrect
+                            ? "text-green-700"
+                            : option.isSelected === true && option.isSelected
+                            ? "text-red-700"
+                            : ""
+                        }
+                      >{`${option.optionName}`}</span>
                     </Radio>
                   );
                 })}
@@ -119,5 +140,3 @@ const AnswerForm: FC<PropsType> = ({
     </Row>
   );
 };
-
-export default AnswerForm;

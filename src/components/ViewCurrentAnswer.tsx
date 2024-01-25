@@ -1,7 +1,7 @@
 import { IAnswerType } from "@/interfaces";
-import AnswerForm from "@/pages/questions/AnswerForm";
 import { Modal } from "antd";
 import { Dispatch, FC, SetStateAction } from "react";
+import { AnswerForm } from "./answer";
 
 type PropsType = {
   open: boolean;
@@ -13,20 +13,17 @@ const ViewCurrentAnswer: FC<PropsType> = ({ open, setOpen, data }) => {
   return (
     <Modal
       destroyOnClose={true}
-      title="Current Quiz Answer"
+      title={`Current Quiz Answer - ${data?.quizTitle} - Score - ${data?.totalScore}`}
       open={open}
       onOk={() => {
         setOpen(false);
       }}
-      width={600}
+      width={800}
       onCancel={() => {
         setOpen(false);
       }}
     >
       <div className="my-6">
-        <h2 className="ms-12 font-semibold mb-3 ">
-          Quiz name: {data.quizTitle}
-        </h2>
         <AnswerForm mode="view" questions={data.answer} />
       </div>
     </Modal>

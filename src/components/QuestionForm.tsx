@@ -1,5 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Card, Form, FormInstance, Input, Space } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  FormInstance,
+  Input,
+  InputNumber,
+  Row,
+  Select,
+  Space,
+} from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { FC, useEffect } from "react";
 import { QuizDetails } from "@/interfaces";
@@ -169,6 +180,40 @@ const QuestionForm: FC<PropsType> = ({ quizDetails, form }) => {
                     </Form.List>
                   </Form.Item>
                 )}
+                <Row gutter={12}>
+                  <Col span={12}>
+                    <Form.Item
+                      labelCol={{ span: 24 }}
+                      label="Question Mark"
+                      name={[field.name, "mark"]}
+                      rules={[{ required: true, message: "Mark Required" }]}
+                    >
+                      <InputNumber min={0} className="w-full" />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      labelCol={{ span: 24 }}
+                      label="Correct Answer"
+                      name={[field.name, "correctAnswer"]}
+                      rules={[{ required: true, message: "Answer Required" }]}
+                    >
+                      <Select
+                        allowClear
+                        className="w-full"
+                        options={[
+                          { value: 1, label: "Option 1" },
+                          { value: 2, label: "Option 2" },
+                          { value: 3, label: "Option 3" },
+                          {
+                            value: 4,
+                            label: "Option 4",
+                          },
+                        ]}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
               </Card>
             ))}
 

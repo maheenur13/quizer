@@ -61,20 +61,20 @@ const QuizForm: FC<CollectionCreateFormProps> = ({ defaultValue, form }) => {
             message: "Please input duration!",
           },
         ]}
-        initialValue={10}
+        initialValue={2}
       >
         <InputNumber
           style={{ width: "100%" }}
           prefix={<ClockCircleOutlined />}
           max={120}
-          min={10}
+          min={1}
           placeholder="duration in minutes"
         />
       </Form.Item>
       <Form.Item name="quizDescription" label="Quiz Description">
         <Input type="textarea" />
       </Form.Item>
-      
+
       <Form.Item name="type" className="collection-create-form_last-form-item">
         <Radio.Group>
           <Radio value="multiple_choice">Multiple Choice</Radio>

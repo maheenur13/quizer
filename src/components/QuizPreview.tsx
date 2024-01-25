@@ -2,6 +2,7 @@ import { QuizDetails } from "@/interfaces";
 import { Card, Popconfirm, Tag } from "antd";
 import { FC } from "react";
 import { ClockCircleOutlined, PlayCircleOutlined } from "@ant-design/icons";
+import { useAppSelector } from "@/store/hook";
 
 type PropsType = {
   quizItem: QuizDetails;
@@ -9,6 +10,9 @@ type PropsType = {
 };
 
 const QuizPreview: FC<PropsType> = ({ quizItem, handleOnConfirm }) => {
+  const {
+    user: { role },
+  } = useAppSelector((state) => state.user);
   return (
     <Card style={{ width: "100%" }} title={quizItem.quizTitle} bordered={true}>
       <div>
@@ -29,6 +33,9 @@ const QuizPreview: FC<PropsType> = ({ quizItem, handleOnConfirm }) => {
               <h6>Total attempts: {quizItem.totalAttempts}</h6>
             </div>
           }
+          okButtonProps={{
+            disabled: role === "admin",
+          }}
           okText="Yes"
           cancelText="No"
           onConfirm={() => handleOnConfirm(quizItem)}

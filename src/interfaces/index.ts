@@ -2,6 +2,7 @@
 export type IOptionType = {
   optionName: string;
   isSelected: boolean;
+  isCorrect: boolean;
 };
 
 export interface IQuestionType {
@@ -9,10 +10,13 @@ export interface IQuestionType {
   title: string;
   type?: "multiple_choice" | "text_answer";
   options: IOptionType[];
+  mark?: number;
+  correctAnswer?: number;
 }
 export type IQuestionAnswerType = {
   title: string;
   options: IOptionType[];
+  mark: number;
 };
 
 export interface IQuizSubmissionDetails {
@@ -54,6 +58,8 @@ export type IAnswerType = {
   answerAt: string | null;
   isSubmitted: boolean;
   answer: IQuestionAnswerType[];
+  totalScore: number;
+  outOfScore: number;
   quizTitle: string;
   previousAnswers?: Omit<IAnswerType, "previousAnswers">[];
 };

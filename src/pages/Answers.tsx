@@ -6,6 +6,7 @@ import userList from "../../mockdata";
 import { ColumnsType } from "antd/es/table";
 import { IAnswerType } from "@/interfaces";
 import ViewCurrentAnswer from "@/components/ViewCurrentAnswer";
+import PreviousAnswerList from "@/components/PreviousAnswerList";
 
 const Answers: FC = () => {
   const { answerList } = useAppSelector((state) => state.quiz);
@@ -17,6 +18,15 @@ const Answers: FC = () => {
     useState<boolean>(false);
 
   const [answerDetails, setAnswerDetails] = useState<IAnswerType>();
+  const [previousAnswers, setPreviousAnswers] = useState<IAnswerType[]>([]);
+  const [isPreviousModalOpen, setIsPreviousModalOpen] =
+    useState<boolean>(false);
+
+  // useEffect(()=>{
+  //   if(answerList.length> 0){
+  //     setPreviousAnswers([...answerList].filter((item) => item.studentId === id).filter((qz)=>qz.quizTitle === ))
+  //   }
+  // },[])
 
   const columns: ColumnsType<IAnswerType> = [
     {
@@ -34,6 +44,14 @@ const Answers: FC = () => {
       title: "Answer Time",
       dataIndex: "answerAt",
       key: "answerAt",
+    },
+    {
+      title: "Score",
+      dataIndex: "score",
+      key: "score",
+      render: (_value, record) => {
+        return <div>{record.totalScore}</div>;
+      },
     },
     {
       title: "User Name",
@@ -73,9 +91,22 @@ const Answers: FC = () => {
         if (!record?.previousAnswers?.length) {
           return <>Not found!</>;
         }
+
         return (
           <>
-            <Button className="bg-green-700 text-white">View</Button>
+            <Button
+              onClick={() => {
+                setPreviousAnswers(
+                  [...answerList]
+                    .filter((item) => item.studentId === record.studentId)
+                    .filter((qz) => qz.quizTitle === record.quizTitle)
+                );
+                setIsPreviousModalOpen(true);
+              }}
+              className="bg-green-700 text-white"
+            >
+              View
+            </Button>
           </>
         );
       },
@@ -98,6 +129,14 @@ const Answers: FC = () => {
           data={answerDetails}
           open={isCurrentAnswerModalOpen}
           setOpen={setIsCurrentAnswerModalOpen}
+        />
+      )}
+
+      {previousAnswers?.length > 0 && (
+        <PreviousAnswerList
+          isOpen={isPreviousModalOpen}
+          previousAnswers={previousAnswers}
+          setIsPreviousModalOpen={setIsPreviousModalOpen}
         />
       )}
     </div>

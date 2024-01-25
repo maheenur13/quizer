@@ -3,7 +3,7 @@ import QuizList from "@/components/QuizList";
 import QuizForm from "@/components/QuizForm";
 import { IQuestionType, QuizDetails } from "@/interfaces";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Empty, Form, Modal } from "antd";
+import { Button, Empty, Form, Modal, message } from "antd";
 import { FC, useEffect, useState } from "react";
 import { useAppSelector } from "@/store/hook";
 import {
@@ -27,6 +27,8 @@ const Questions: FC = () => {
     isQuestionModalOpen,
     questionFormMode,
   } = useAppSelector((state) => state.quiz);
+
+  const [messageApi, contextHolder] = message.useMessage();
 
   const [quizForm] = Form.useForm();
   const [questionForm] = Form.useForm();
@@ -63,10 +65,45 @@ const Questions: FC = () => {
   };
 
   const handleQuestionSubmit = async () => {
-    if (currentValues) {
-      let newCurrentQuiz = {};
-      if (questionFormMode === "create") {
-        if (await questionForm.validateFields()) {
+    if (
+      questionForm.getFieldsError().filter((item) => item.errors.length > 0)
+        .length > 0
+    ) {
+      messageApi.error({
+        content: "One or more required field missing!",
+        duration: 5,
+      });
+    }
+
+    if (await questionForm.validateFields()) {
+      if (currentValues) {
+        let newCurrentQuiz = {};
+        if (questionFormMode === "create") {
+          if (await questionForm.validateFields()) {
+            const qustions = [...questionForm.getFieldsValue().questions].map(
+              (question) => {
+                return {
+                  ...question,
+                  options: Object.entries(question.options[0]).map(
+                    (optionItem) => {
+                      return {
+                        optionName: optionItem[1],
+                        isSelected: false,
+                      };
+                    }
+                  ),
+                };
+              }
+            );
+            newCurrentQuiz = {
+              ...currentValues,
+              questions: [
+                ...(currentValues?.questions as IQuestionType[]),
+                ...qustions,
+              ],
+            };
+          }
+        } else {
           const qustions = [...questionForm.getFieldsValue().questions].map(
             (question) => {
               return {
@@ -84,40 +121,20 @@ const Questions: FC = () => {
           );
           newCurrentQuiz = {
             ...currentValues,
-            questions: [
-              ...(currentValues?.questions as IQuestionType[]),
-              ...qustions,
-            ],
+            questions: [...qustions],
           };
         }
-      } else {
-        const qustions = [...questionForm.getFieldsValue().questions].map(
-          (question) => {
-            return {
-              ...question,
-              options: Object.entries(question.options[0]).map((optionItem) => {
-                return {
-                  optionName: optionItem[1],
-                  isSelected: false,
-                };
-              }),
-            };
-          }
-        );
-        newCurrentQuiz = {
-          ...currentValues,
-          questions: [...qustions],
-        };
+
+        handleUpdateQuiz(newCurrentQuiz as QuizDetails);
+
+        handleSetQuestionModal(false);
       }
-
-      handleUpdateQuiz(newCurrentQuiz as QuizDetails);
-
-      handleSetQuestionModal(false);
     }
   };
 
   return (
     <div className="p-1">
+      {contextHolder}
       <div className="text-right">
         <Button
           type="primary"
