@@ -6,6 +6,8 @@
 - React
 - Typescript
 - Redux Toolkit
+- Tailwind CSS
+- Ant Design
 
 ### provide this command to the terminal to install all the dependencies
 
